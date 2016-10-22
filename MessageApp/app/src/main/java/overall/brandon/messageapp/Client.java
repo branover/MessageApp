@@ -2,26 +2,30 @@ package overall.brandon.messageapp;
 
 import android.os.AsyncTask;
 
+
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
 
 /**
  * Created by Brandon on 10/21/2016.
  */
 
-public class Client extends AsyncTask<String, Void, Void> {
+public class Client extends AsyncTask<String, Void, String> {
 
     private static final String SERVER_IP = "192.168.0.3";
     private static final Integer SERVER_PORT = 6666;
     private String response = "";
 
     @Override
-    protected Void doInBackground(String... params) {
+    protected String doInBackground(String... params) {
 
         Socket socket = null;
 
@@ -29,19 +33,33 @@ public class Client extends AsyncTask<String, Void, Void> {
             socket = new Socket(SERVER_IP,SERVER_PORT);
 
             DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
-            dataOutputStream.write("TEST".getBytes());
-            dataOutputStream.flush();
-            int bytesRead;
-            InputStream inputStream =  new DataInputStream(socket.getInputStream());
-            byte buffer[] = null;
+            DataInputStream inputStream =  new DataInputStream(socket.getInputStream());
 
-         /*
-          * notice: inputStream.read() will block if no data return
-          */
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                //dataOutputStream.write(buffer, 0, bytesRead);
-                response += buffer.toString();
+            dataOutputStream.write("REGISTER".getBytes());
+
+            InputStreamReader inputStreamReader;
+            BufferedReader reader = null;
+
+            for(String string : params) {
+                //System.out.println(string);
+                dataOutputStream.write(string.getBytes());
+                dataOutputStream.flush();
+
+                StringBuilder output = new StringBuilder();
+                if (inputStream != null) {
+                    inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+                    reader = new BufferedReader(inputStreamReader);
+                    String line;
+//                    while ((line = reader.readLine()) != null) {
+//                        output.append(line);
+//                        System.out.println(line);
+//                    }
+                    output.append(reader.readLine());
+                }
+                response += output.toString() + "\n";
             }
+            response += reader.readLine() + "\n";
+
 
         } catch (UnknownHostException e) {
             // TODO Auto-generated catch block
@@ -61,7 +79,7 @@ public class Client extends AsyncTask<String, Void, Void> {
                 }
             }
         }
-        return null;
+        return response;
 
     }
 

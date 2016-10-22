@@ -1,5 +1,6 @@
 import socket
 import sys
+import AliasRegistrar
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -11,6 +12,9 @@ sock.bind(server_address)
 
 # Listen for incoming connections
 sock.listen(1)
+aliasDict = AliasRegistrar.load_aliases()
+print aliasDict
+
 
 while True:
     # Wait for a connection
@@ -19,14 +23,16 @@ while True:
 
     try:
         print >> sys.stderr, 'connection from', client_address
-
         # Receive the data in small chunks and retransmit it
         while True:
-            data = connection.recv(16)
-            print >> sys.stderr, 'received "%s"' % data
+            data = connection.recv(128)
+            #print >> sys.stderr, 'received "%s"' % data
             if data:
-                print >> sys.stderr, 'sending data back to the client'
-                connection.sendall("SUCCESS\n")
+                if data == "REGISTER":
+                    AliasRegistrar.register(connection)
+                    break
+
+
             else:
                 print >> sys.stderr, 'no more data from', client_address
                 break

@@ -23,12 +23,11 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:text="TextView"
+                android:text="Android ID:"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView"
                 android:layout_weight="1"
-                tools:text="Android ID:"
                 android:layout_marginRight="16dp"/>
 
             <TextView
@@ -59,7 +58,65 @@
                 android:ems="10"
                 android:id="@+id/aliasText"
                 android:hint="Set Alias"
+                android:text="Test"
                 android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:text="IP Address:"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView6"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_marginRight="16dp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/ipAddressText"
+                android:layout_weight="1"
+                tools:text="192.168.0.3" />
+
+            <TextView
+                android:text="Desired Port:"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView4"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:layout_marginRight="8dp"/>
+
+            <EditText
+                android:text="4359"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/portEditText"
+                android:layout_weight="0.6" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last Command Status"
+                android:layout_marginRight="16dp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/statusText"
+                tools:text="SUCCESS" />
         </LinearLayout>
 
         <Button
