@@ -40,6 +40,7 @@ public class Client extends AsyncTask<Object, Void, Object> {
 
     @Override
     protected Object doInBackground(Object... params) {
+        response = "";
         String command = (String) params[0];
         User user;
         ArrayList<String> userParams;
@@ -97,15 +98,16 @@ public class Client extends AsyncTask<Object, Void, Object> {
                 reader = new BufferedReader(inputStreamReader);
                 Integer peerListSize = (Integer.parseInt(reader.readLine()));
 
-                 while (reader.ready()) {
-                    output.append(reader.readLine());
-                 }
+                output.append(reader.readLine());
+
+                Log.e("Output",output.toString());
                 Gson gson = new Gson();
                 JSONObject json = null;
                 try {
                     json = new JSONObject(output.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
+                    json = new JSONObject();
                 }
                 if (json.length() == peerListSize) {
                     for (Iterator<String> iter = json.keys(); iter.hasNext();) {

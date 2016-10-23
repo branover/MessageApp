@@ -45,7 +45,7 @@ public final class Requests {
         }
     }
 
-    public static ArrayList<Peer> updatePeerList() {
+    public static Pair<String,ArrayList<Peer>> updatePeerList() {
         Client client = new Client();
         Pair<String,ArrayList<Peer>> test = new Pair<>("",new ArrayList<Peer>());
         try {
@@ -56,7 +56,7 @@ public final class Requests {
             e.printStackTrace();
         }
         finally {
-            return test.second;
+            return test;
         }
     }
 }

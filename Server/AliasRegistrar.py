@@ -79,7 +79,7 @@ def update_ip(connection):
         data = connection.recv(128)
         if not data:
             break
-        data = data.split(":")
+        data = data.split(":",1)
         if data[0] == "ALIAS":
             alias.alias = data[1]
             connection.sendall("RECV ALIAS\n")
@@ -90,7 +90,7 @@ def update_ip(connection):
             alias.ip = data[1]
             connection.sendall("RECV IP\n")
         elif data[0] == "IPV6":
-            alias.ipv6 == data[1]
+            alias.ipv6 = data[1]
             connection.sendall("RECV IPV6\n")
         elif data[0] == "PORT":
             alias.port = data[1]

@@ -9,6 +9,7 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # Bind the socket to the port
 server_address = ('0.0.0.0', 6666)
 print >>sys.stderr, 'starting up on %s port %s' % server_address
+#sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.bind(server_address)
 
 # Listen for incoming connections

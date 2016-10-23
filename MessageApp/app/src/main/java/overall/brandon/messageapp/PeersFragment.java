@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -41,9 +43,15 @@ public class PeersFragment extends Fragment {
         updatePeerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                peerList.clear();
-                peerList.addAll(Requests.updatePeerList());
-                peerListAdapter.notifyDataSetChanged();
+                Pair<String, ArrayList<Peer>> result = Requests.updatePeerList();
+                if (result.first.equals("PEER UPDATE SUCCESS")) {
+                    peerList.clear();
+                    peerList.addAll(result.second);
+                    peerListAdapter.notifyDataSetChanged();
+                }
+                else {
+                    Toast.makeText(v.getContext(),"Peer Update Failed",Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
