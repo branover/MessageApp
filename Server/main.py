@@ -13,7 +13,6 @@ sock.bind(server_address)
 # Listen for incoming connections
 sock.listen(1)
 aliasDict = AliasRegistrar.load_aliases()
-print aliasDict
 
 
 while True:
@@ -30,6 +29,9 @@ while True:
             if data:
                 if data == "REGISTER":
                     AliasRegistrar.register(connection)
+                    break
+                elif data == "UPDATE":
+                    AliasRegistrar.update_ip(connection)
                     break
 
 

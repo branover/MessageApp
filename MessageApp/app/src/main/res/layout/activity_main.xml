@@ -103,6 +103,26 @@
 
         <LinearLayout
             android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:text="Register"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/registerButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="UPDATE IP"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/updateButton"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -119,11 +139,6 @@
                 tools:text="SUCCESS" />
         </LinearLayout>
 
-        <Button
-            android:text="Register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/registerButton" />
     </LinearLayout>
 
 </RelativeLayout>

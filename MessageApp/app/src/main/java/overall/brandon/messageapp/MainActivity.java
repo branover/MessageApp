@@ -32,7 +32,10 @@ public class MainActivity extends AppCompatActivity {
 
         TextView androidIDText = (TextView) findViewById(R.id.androidIDText);
         final EditText aliasText = (EditText) findViewById(R.id.aliasText);
+
+        //Buttons
         Button registerButton = (Button) findViewById(R.id.registerButton);
+        Button updateButton = (Button) findViewById(R.id.updateButton);
 
         androidIDText.setText(androidId);
 
@@ -53,6 +56,15 @@ public class MainActivity extends AppCompatActivity {
                 String alias = aliasText.getText().toString();
                 user = new User(androidId,alias,ipAddress,Integer.parseInt(portEditText.getText().toString()));
                 statusTextView.setText(Requests.registerUser(user));
+            }
+        });
+
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String alias = aliasText.getText().toString();
+                user = new User(androidId,alias,ipAddress,Integer.parseInt(portEditText.getText().toString()));
+                statusTextView.setText(Requests.updateUser(user));
             }
         });
 
