@@ -1,6 +1,7 @@
 import socket
 import sys
 import AliasRegistrar
+import PeerManager
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -28,10 +29,13 @@ while True:
             #print >> sys.stderr, 'received "%s"' % data
             if data:
                 if data == "REGISTER":
-                    AliasRegistrar.register(connection)
+                    aliasDict = AliasRegistrar.register(connection)
                     break
                 elif data == "UPDATE":
-                    AliasRegistrar.update_ip(connection)
+                    aliasDict = AliasRegistrar.update_ip(connection)
+                    break
+                elif data == "UPDATEPEER":
+                    PeerManager.update_peer(connection, aliasDict)
                     break
 
 

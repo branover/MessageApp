@@ -1,7 +1,18 @@
 package overall.brandon.messageapp;
 
 import android.os.AsyncTask;
+import android.support.v4.util.Pair;
+import android.util.Log;
 
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -14,26 +25,47 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Created by Brandon on 10/21/2016.
  */
 
-public class Client extends AsyncTask<Object, Void, String> {
+public class Client extends AsyncTask<Object, Void, Object> {
 
     private static final String SERVER_IP = "192.168.0.3";
     private static final Integer SERVER_PORT = 6666;
-    private String response = "";
+    private Object response;
+
 
     @Override
-    protected String doInBackground(Object... params) {
+    protected Object doInBackground(Object... params) {
         String command = (String) params[0];
+        User user;
+        ArrayList<String> userParams;
         switch (command) {
             case "Register":
-                response = handleRegisterConnection((ArrayList<String>) params[1]);
+                user = (User) params[1];
+                userParams = new ArrayList<>();
+                userParams.add("ALIAS:"+user.getAlias());
+                userParams.add("ID:"+user.getAndroidId());
+                userParams.add("IP:"+user.getIp());
+                userParams.add("IPV6:"+user.getIPv6());
+                userParams.add("PORT:"+String.valueOf(user.getPort()));
+                response = handleRegisterConnection(userParams);
                 break;
             case "Update":
-                response = handleUpdateCommand((ArrayList<String>) params[1]);
+                user = (User) params[1];
+                userParams = new ArrayList<>();
+                userParams.add("ALIAS:"+user.getAlias());
+                userParams.add("ID:"+user.getAndroidId());
+                userParams.add("IP:"+user.getIp());
+                userParams.add("IPV6:"+user.getIPv6());
+                userParams.add("PORT:"+String.valueOf(user.getPort()));
+                response = handleUpdateCommand(userParams);
+                break;
+            case "PeerUpdate":
+                response = handleUpdatePeerCommand();
                 break;
             default:
                 response = "INVALID COMMAND";
@@ -41,6 +73,78 @@ public class Client extends AsyncTask<Object, Void, String> {
 
         return response;
 
+    }
+
+    private Pair<String,ArrayList<Peer>> handleUpdatePeerCommand() {
+        Socket socket = null;
+
+        try {
+            ArrayList<Peer> peerList = new ArrayList<Peer>();
+            socket = new Socket(SERVER_IP,SERVER_PORT);
+
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            DataInputStream inputStream =  new DataInputStream(socket.getInputStream());
+
+            dataOutputStream.write("UPDATEPEER".getBytes());
+            dataOutputStream.flush();
+
+            InputStreamReader inputStreamReader;
+            BufferedReader reader = null;
+
+            StringBuilder output = new StringBuilder();
+            if (inputStream != null) {
+                inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+                reader = new BufferedReader(inputStreamReader);
+                Integer peerListSize = (Integer.parseInt(reader.readLine()));
+
+                 while (reader.ready()) {
+                    output.append(reader.readLine());
+                 }
+                Gson gson = new Gson();
+                JSONObject json = null;
+                try {
+                    json = new JSONObject(output.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (json.length() == peerListSize) {
+                    for (Iterator<String> iter = json.keys(); iter.hasNext();) {
+                        try {
+                            String strEntry = json.get(iter.next()).toString();
+                            JsonElement entry = new JsonParser().parse(strEntry);
+                            Peer peer = gson.fromJson(entry, Peer.class);
+                            peerList.add(peer);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return new Pair<>("PEER UPDATE SUCCESS", peerList);
+                }
+                else {
+                    return new Pair<>("SIZE MISMATCH",new ArrayList<Peer>());
+                }
+            }
+
+
+//            response += reader.readLine() + "\n";
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            //response = "UnknownHostException: " + e.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            //response = "IOException: " + e.toString();
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        response = new Pair<String, ArrayList<Peer>>("TESTRESPONSE",new ArrayList<Peer>());
+        return (Pair<String,ArrayList<Peer>>) response;
     }
 
     private String handleUpdateCommand(ArrayList<String> params) {
@@ -87,7 +191,7 @@ public class Client extends AsyncTask<Object, Void, String> {
                 }
             }
         }
-        return response;
+        return (String) response;
     }
 
     private String handleRegisterConnection(ArrayList<String> params) {
@@ -134,6 +238,6 @@ public class Client extends AsyncTask<Object, Void, String> {
                 }
             }
         }
-        return response;
+        return (String) response;
     }
 }

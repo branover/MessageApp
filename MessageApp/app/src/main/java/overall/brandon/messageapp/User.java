@@ -14,11 +14,14 @@ public class User {
 
     int port;
 
-    public User(String androidId, String alias, String ip, int port) {
+    String ipv6 = "none";
+
+    public User(String androidId, String alias, String ip, int port, String ipv6) {
         this.androidId = androidId;
         this.alias = alias;
         this.ip = ip;
         this.port = port;
+        this.ipv6 = ipv6;
     }
 
     public User(String androidId) {
@@ -48,5 +51,7 @@ public class User {
     public int getPort() {return port; }
 
     public void setPort(int port) {this.port = port;}
+
+    public String getIPv6() { return this.ipv6;}
 
 }

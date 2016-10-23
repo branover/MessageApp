@@ -1,1 +1,1 @@
-{"Test": {"ip": "10.0.2.15", "android_id": "4f8474922cc33b7a", "port": "43591"}}
+{"Test": {"alias": "Test", "ip": "192.168.0.9", "ipv6": "2601:147:C101:90D0:B0DF:1B6A:F3B0:F839", "port": "4359", "androidId": "778a6bd2d8024406"}, "Emulator": {"alias": "Emulator", "port": "4359", "ip": "10.0.2.15", "androidId": "4f8474922cc33b7a", "ipv6": ""}}

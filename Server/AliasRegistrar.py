@@ -10,7 +10,6 @@ def load_aliases():
     f = open(ALIAS_DATABASE, 'r')
     try:
         aliasDict = json.load(f)
-        print aliasDict
     # if the file is empty the ValueError will be thrown
     except ValueError:
         aliasDict = {}
@@ -25,16 +24,19 @@ def register(connection):
         data = connection.recv(128)
         if not data:
             break
-        data = data.split(":")
+        data = data.split(":", 1)
         if data[0] == "ALIAS":
             alias.alias = data[1]
             connection.sendall("RECV ALIAS\n")
         elif data[0] == "ID":
-            alias.android_id = data[1]
+            alias.androidId = data[1]
             connection.sendall("RECV ID\n")
         elif data[0] == "IP":
             alias.ip = data[1]
             connection.sendall("RECV IP\n")
+        elif data[0] == "IPV6":
+            alias.ipv6 = data[1]
+            connection.sendall("RECV IPV6\n")
         elif data[0] == "PORT":
             alias.port = data[1]
             connection.sendall("RECV PORT\n")
@@ -43,18 +45,19 @@ def register(connection):
             print >> sys.stderr, 'no more data'
 
     if exist_check(connection, alias):
-        aliasDict[alias.alias] = {"android_id": alias.android_id, "ip": alias.ip, "port": alias.port}
+        aliasDict[alias.alias] = {"alias": alias.alias, "androidId": alias.androidId, "ip": alias.ip, "ipv6": alias.ipv6, "port": alias.port}
         update_alias_database()
+    return aliasDict
 
 
 def exist_check(connection, alias):
     global aliasDict
-    if alias.alias and alias.android_id:
+    if alias.alias and alias.androidId:
         if alias.alias not in aliasDict:
             connection.sendall("ALIAS REGISTERED")
             return True
 
-        elif aliasDict[alias.alias]["android_id"] == alias.android_id:
+        elif aliasDict[alias.alias]["androidId"] == alias.androidId:
             connection.sendall("ALREADY REGISTERED")
             return False
 
@@ -81,28 +84,33 @@ def update_ip(connection):
             alias.alias = data[1]
             connection.sendall("RECV ALIAS\n")
         elif data[0] == "ID":
-            alias.android_id = data[1]
+            alias.androidId = data[1]
             connection.sendall("RECV ID\n")
         elif data[0] == "IP":
             alias.ip = data[1]
             connection.sendall("RECV IP\n")
+        elif data[0] == "IPV6":
+            alias.ipv6 == data[1]
+            connection.sendall("RECV IPV6\n")
         elif data[0] == "PORT":
             alias.port = data[1]
             connection.sendall("RECV PORT\n")
             break
         else:
             print >> sys.stderr, 'no more data'
-    if alias.alias in aliasDict and (aliasDict[alias.alias]["android_id"] == alias.android_id):
+    if alias.alias in aliasDict and (aliasDict[alias.alias]["androidId"] == alias.androidId):
         connection.sendall("UPDATE SUCCESS")
         aliasDict[alias.alias]["ip"] = alias.ip
         aliasDict[alias.alias]["port"] = alias.port
+        aliasDict[alias.alias]["ipv6"] = alias.ipv6
         update_alias_database()
-    return None
+    return aliasDict
 
 
 class AliasObj:
-    def __init__(self, alias="", android_id="", ip="", port=""):
+    def __init__(self, alias="", android_id="", ip="", port="", ipv6=""):
         self.alias = alias
-        self.android_id = android_id
+        self.androidId = android_id
         self.ip = ip
         self.port = port
+        self.ipv6 = ipv6
