@@ -25,6 +25,9 @@ import static android.content.Context.WIFI_SERVICE;
 public class RegisterFragment extends Fragment {
     User user;
 
+    private static final String SERVER_IP = "192.168.0.3";
+    private static final String SERVER_IP6 = "2601:147:c101:90d0:7d7b:1a75:5240:1d1";
+
     public RegisterFragment() {
         // Required empty public constructor
     }
@@ -91,6 +94,7 @@ public class RegisterFragment extends Fragment {
 
         ipTextView.setText(ipv4Address);
         if (!ipv6Address.isEmpty()) {
+            Client.SERVER_IP = SERVER_IP6;
             TextView ipv6TextView = (TextView) v.findViewById(R.id.ipv6TextView);
             ipv6TextView.setMovementMethod(new ScrollingMovementMethod());
             ipv6TextView.setText(ipv6Address);

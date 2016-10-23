@@ -33,7 +33,7 @@ import java.util.Iterator;
 
 public class Client extends AsyncTask<Object, Void, Object> {
 
-    private static final String SERVER_IP = "192.168.0.3";
+    public static String SERVER_IP = "192.168.0.3";
     private static final Integer SERVER_PORT = 6666;
     private Object response;
 
