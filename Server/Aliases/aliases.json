@@ -1,1 +1,1 @@
-{"Test": {"ip": "192.168.0.9", "androidId": "778a6bd2d8024406", "ipv6": "2601:147:C101:90D0:B0DF:1B6A:F3B0:F839", "port": "4359", "alias": "Test"}, "Emulator": {"ip": "10.0.2.15", "androidId": "4f8474922cc33b7a", "ipv6": "", "port": "4359", "alias": "Emulator"}}
+{"Test": {"alias": "Test", "androidId": "778a6bd2d8024406", "ipv6": "2601:147:C101:90D0:B0DF:1B6A:F3B0:F839", "port": "4359", "ip": "192.168.0.9"}, "Emulator": {"alias": "Emulator", "androidId": "4f8474922cc33b7a", "ipv6": "", "port": "4359", "ip": "10.0.2.15"}}

@@ -2,19 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
-    <RadioButton
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:id="@+id/radioButton"
-        android:layout_weight="1"
-        android:clickable="false" />
+    <View
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:id="@+id/onlineStatus"
+        android:clickable="false"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:background="@drawable/online_status"/>
 
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/peerAlias"
+        android:layout_margin="16dp"
         android:layout_weight="4"
-        tools:text="Test Alias" />
+        tools:text="Test Alias"
+        android:textSize="12pt"/>
 </LinearLayout>
