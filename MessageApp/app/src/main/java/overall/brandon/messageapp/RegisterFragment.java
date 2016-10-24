@@ -25,8 +25,13 @@ import static android.content.Context.WIFI_SERVICE;
 public class RegisterFragment extends Fragment {
     User user;
 
-    private static final String SERVER_IP = "192.168.0.3";
-    private static final String SERVER_IP6 = "2601:147:c101:90d0:7d7b:1a75:5240:1d1";
+    //Home
+    //private static final String SERVER_IP = "192.168.0.3";
+    //private static final String SERVER_IP6 = "2601:147:c101:90d0:7d7b:1a75:5240:1d1";
+
+    //Work
+    private static final String SERVER_IP = "10.1.10.252";
+    private static final String SERVER_IP6 = "2603:3003:1f01:d800:492f:ec14:fd48:dfaf";
 
     public RegisterFragment() {
         // Required empty public constructor

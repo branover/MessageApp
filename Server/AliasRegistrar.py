@@ -104,6 +104,8 @@ def update_ip(connection):
         aliasDict[alias.alias]["port"] = alias.port
         aliasDict[alias.alias]["ipv6"] = alias.ipv6
         update_alias_database()
+    else:
+        connection.sendall("WRONG ANDROIDID")
     return aliasDict
 
 
