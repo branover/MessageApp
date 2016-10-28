@@ -1,5 +1,6 @@
 import sys
 import json
+from time import time
 
 ALIAS_DATABASE = "./Aliases/aliases.json"
 aliasDict = {}
@@ -45,7 +46,7 @@ def register(connection):
             print >> sys.stderr, 'no more data'
 
     if exist_check(connection, alias):
-        aliasDict[alias.alias] = {"alias": alias.alias, "androidId": alias.androidId, "ip": alias.ip, "ipv6": alias.ipv6, "port": alias.port}
+        aliasDict[alias.alias] = {"alias": alias.alias, "androidId": alias.androidId, "ip": alias.ip, "ipv6": alias.ipv6, "port": alias.port, "createtime": alias.createtime, "onlinetime": alias.onlinetime}
         update_alias_database()
     return aliasDict
 
@@ -103,16 +104,47 @@ def update_ip(connection):
         aliasDict[alias.alias]["ip"] = alias.ip
         aliasDict[alias.alias]["port"] = alias.port
         aliasDict[alias.alias]["ipv6"] = alias.ipv6
+        aliasDict[alias.alias]["onlinetime"] = int(time())
         update_alias_database()
     else:
         connection.sendall("WRONG ANDROIDID")
     return aliasDict
 
 
+def update_onlinetime(connection):
+    global aliasDict
+    alias = ""
+    id = ""
+    while True:
+        data = connection.recv(128)
+        if not data:
+            break
+        data = data.split(":", 1)
+        if data[0] == "ALIAS":
+            alias = data[1]
+        elif data[0] == "ID":
+            id = data[1]
+    print alias
+    print id
+
+    for entry in aliasDict:
+        if entry == alias and id == aliasDict[alias]["androidId"]:
+            print "True"
+        else:
+            print "False"
+
+
+
+
+
 class AliasObj:
-    def __init__(self, alias="", android_id="", ip="", port="", ipv6=""):
+    def __init__(self, alias="", android_id="", ip="", port="", ipv6="", createtime=int(time()), onlinetime=int(time())):
         self.alias = alias
         self.androidId = android_id
         self.ip = ip
         self.port = port
         self.ipv6 = ipv6
+        self.createtime = createtime
+        self.onlinetime = onlinetime
+
+

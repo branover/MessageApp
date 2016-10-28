@@ -33,8 +33,8 @@ import java.util.Iterator;
 
 public class Client extends AsyncTask<Object, Void, Object> {
 
-    //public static String SERVER_IP = "192.168.0.3";
-    public static String SERVER_IP = "10.1.10.252";
+    public static String SERVER_IP = "192.168.0.3";
+    //public static String SERVER_IP = "10.1.10.252";
     private static final Integer SERVER_PORT = 6666;
     private Object response;
 
@@ -69,12 +69,49 @@ public class Client extends AsyncTask<Object, Void, Object> {
             case "PeerUpdate":
                 response = handleUpdatePeerCommand();
                 break;
+            case "Ping":
+                response = handleKeepaliveCommand((User) params[1]);
+                break;
             default:
                 response = "INVALID COMMAND";
         }
 
         return response;
 
+    }
+
+    private String handleKeepaliveCommand(User user) {
+        Log.e("Server Info", SERVER_IP + "   " + SERVER_PORT);
+        Log.e("Test","test");
+
+
+        Socket socket = null;
+
+        try {
+            socket = new Socket(SERVER_IP,SERVER_PORT);
+
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
+            dataOutputStream.write("PING".getBytes());
+            dataOutputStream.write(("ALIAS:"+user.getAlias()).getBytes());
+            dataOutputStream.write(("ID:"+user.getAndroidId()).getBytes());
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            //response = "UnknownHostException: " + e.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            //response = "IOException: " + e.toString();
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return "TRUE";
     }
 
     private Pair<String,ArrayList<Peer>> handleUpdatePeerCommand() {
@@ -243,4 +280,5 @@ public class Client extends AsyncTask<Object, Void, Object> {
         }
         return (String) response;
     }
+
 }

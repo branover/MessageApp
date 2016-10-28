@@ -55,7 +55,8 @@ while True:
                 elif data == "UPDATEPEER":
                     PeerManager.update_peer(connection, aliasDict)
                     break
-
+                elif data == "PING":
+                    AliasRegistrar.update_onlinetime(connection)
 
             else:
                 print >> sys.stderr, 'no more data from', client_address

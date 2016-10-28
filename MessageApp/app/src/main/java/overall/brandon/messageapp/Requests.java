@@ -59,4 +59,20 @@ public final class Requests {
             return test;
         }
     }
+
+    public static String keepalive(User user) {
+        Client client = new Client();
+        String test = "";
+
+        try {
+            test = (String) client.execute("Ping",user).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        finally {
+            return test;
+        }
+    }
 }

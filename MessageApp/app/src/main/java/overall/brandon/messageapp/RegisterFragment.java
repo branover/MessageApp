@@ -1,5 +1,8 @@
 package overall.brandon.messageapp;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
@@ -19,6 +22,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import static android.content.Context.ALARM_SERVICE;
 import static android.content.Context.WIFI_SERVICE;
 
 
@@ -26,12 +30,12 @@ public class RegisterFragment extends Fragment {
     User user;
 
     //Home
-    //private static final String SERVER_IP = "192.168.0.3";
-    //private static final String SERVER_IP6 = "2601:147:c101:90d0:7d7b:1a75:5240:1d1";
+    private static final String SERVER_IP = "192.168.0.3";
+    private static final String SERVER_IP6 = "2601:147:c101:90d0:7d7b:1a75:5240:1d1";
 
     //Work
-    private static final String SERVER_IP = "10.1.10.252";
-    private static final String SERVER_IP6 = "2603:3003:1f01:d800:492f:ec14:fd48:dfaf";
+    //private static final String SERVER_IP = "10.1.10.252";
+    //private static final String SERVER_IP6 = "2603:3003:1f01:d800:492f:ec14:fd48:dfaf";
 
     public RegisterFragment() {
         // Required empty public constructor
@@ -128,6 +132,19 @@ public class RegisterFragment extends Fragment {
                 statusTextView.setText(Requests.updateUser(user));
             }
         });
+
+
+        //Set keepalive alarm to remain online
+        Intent i = new Intent(v.getContext(), AlarmReceiver.class);
+        user = new User(androidId,aliasText.getText().toString(),ipv4Address,Integer.parseInt(portEditText.getText().toString()),ipv6Address);
+        i.putExtra("User",user);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0,i,PendingIntent.FLAG_CANCEL_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) ((MainActivity)getActivity()).getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(), 1000 * 30,pendingIntent);
+
+
         return v;
     }
 }

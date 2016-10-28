@@ -1,10 +1,12 @@
 package overall.brandon.messageapp;
 
+import java.io.Serializable;
+
 /**
  * Created by Brandon on 10/21/2016.
  */
 
-public class User {
+public class User implements Serializable {
 
     String androidId;
 
