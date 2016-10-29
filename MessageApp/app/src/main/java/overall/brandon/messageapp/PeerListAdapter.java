@@ -56,6 +56,15 @@ public class PeerListAdapter extends BaseAdapter implements ListAdapter {
         TextView peerAlias = (TextView) view.findViewById(R.id.peerAlias);
         peerAlias.setText(peer.getAlias());
 
+        View onlineStatus = (View) view.findViewById(R.id.onlineStatus);
+        Integer onlineTime = peer.getOnlineTime();
+        if ( (System.currentTimeMillis() / 1000) - onlineTime <= 120 ) {
+            onlineStatus.setBackgroundResource(R.drawable.online_status);
+        }
+        else {
+            onlineStatus.setBackgroundResource(R.drawable.offline_status);
+        }
+
 
         return view;
     }

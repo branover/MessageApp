@@ -16,7 +16,6 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Toast.makeText(context, "Alarm worked.", Toast.LENGTH_LONG).show();
         Bundle b = intent.getBundleExtra("bundle");
         User user = (User) b.getSerializable("User");
         Requests.keepalive(user);

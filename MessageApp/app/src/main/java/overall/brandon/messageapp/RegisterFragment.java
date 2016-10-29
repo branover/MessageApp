@@ -28,6 +28,7 @@ import static android.content.Context.WIFI_SERVICE;
 
 public class RegisterFragment extends Fragment {
     User user;
+    AlarmManager alarmManager;
 
     //Home
     private static final String SERVER_IP = "192.168.0.3";
@@ -114,38 +115,42 @@ public class RegisterFragment extends Fragment {
 
         //Status TextView
         final TextView statusTextView = (TextView) v.findViewById(R.id.statusText);
+        user = new User(androidId,aliasText.getText().toString(),ipv4Address,Integer.parseInt(portEditText.getText().toString()),ipv6Address);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String alias = aliasText.getText().toString();
-                user = new User(androidId,alias,ipv4Address,Integer.parseInt(portEditText.getText().toString()),ipv6Address);
+                user.setAlias(aliasText.getText().toString());
+                user.setPort(Integer.parseInt(portEditText.getText().toString()));
                 statusTextView.setText(Requests.registerUser(user));
+                updateAlarm(user);
             }
         });
 
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String alias = aliasText.getText().toString();
-                user = new User(androidId,alias,ipv4Address,Integer.parseInt(portEditText.getText().toString()),ipv6Address);
+                user.setAlias(aliasText.getText().toString());
+                user.setPort(Integer.parseInt(portEditText.getText().toString()));
                 statusTextView.setText(Requests.updateUser(user));
+                updateAlarm(user);
             }
         });
 
+        updateAlarm(user);
 
+        return v;
+    }
+
+    private void updateAlarm(User user) {
         //Set keepalive alarm to remain online
         Intent i = new Intent(getContext(), AlarmReceiver.class);
-        user = new User(androidId,aliasText.getText().toString(),ipv4Address,Integer.parseInt(portEditText.getText().toString()),ipv6Address);
         Bundle b = new Bundle();
         b.putSerializable("User",user);
         i.putExtra("bundle",b);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0,i,PendingIntent.FLAG_CANCEL_CURRENT);
-
-        AlarmManager alarmManager = (AlarmManager) ((MainActivity)getActivity()).getSystemService(ALARM_SERVICE);
+        Requests.keepalive(user);
+        alarmManager = (AlarmManager) ((MainActivity)getActivity()).getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(), 1000 * 30,pendingIntent);
-
-
-        return v;
     }
 }

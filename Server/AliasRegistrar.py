@@ -128,10 +128,14 @@ def update_onlinetime(connection):
             alias = line[1]
         elif line[0] == "ID":
             id = line[1]
+    print data
     for entry in aliasDict:
         if entry == alias and id == aliasDict[alias]["androidId"]:
             aliasDict[entry]["onlinetime"] = int(time())
             update_alias_database()
+            print "True"
+        else:
+            print "False"
 
 
 class AliasObj:

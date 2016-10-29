@@ -11,7 +11,7 @@
         android:clickable="false"
         android:layout_gravity="center"
         android:layout_margin="16dp"
-        android:background="@drawable/online_status"/>
+        android:background="@drawable/offline_status"/>
 
     <TextView
         android:layout_width="0dp"
