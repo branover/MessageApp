@@ -82,8 +82,6 @@ public class Client extends AsyncTask<Object, Void, Object> {
 
     private String handleKeepaliveCommand(User user) {
         Log.e("Server Info", SERVER_IP + "   " + SERVER_PORT);
-        Log.e("Test","test");
-
 
         Socket socket = null;
 
@@ -94,6 +92,7 @@ public class Client extends AsyncTask<Object, Void, Object> {
 
             dataOutputStream.write("PING".getBytes());
             dataOutputStream.write(("ALIAS:"+user.getAlias()).getBytes());
+            dataOutputStream.write("//".getBytes());
             dataOutputStream.write(("ID:"+user.getAndroidId()).getBytes());
 
         } catch (UnknownHostException e) {

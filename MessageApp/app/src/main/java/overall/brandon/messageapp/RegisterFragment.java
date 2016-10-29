@@ -135,10 +135,11 @@ public class RegisterFragment extends Fragment {
 
 
         //Set keepalive alarm to remain online
-        Intent i = new Intent(v.getContext(), AlarmReceiver.class);
+        Intent i = new Intent(getContext(), AlarmReceiver.class);
         user = new User(androidId,aliasText.getText().toString(),ipv4Address,Integer.parseInt(portEditText.getText().toString()),ipv6Address);
-        i.putExtra("User",user);
-
+        Bundle b = new Bundle();
+        b.putSerializable("User",user);
+        i.putExtra("bundle",b);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(),0,i,PendingIntent.FLAG_CANCEL_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) ((MainActivity)getActivity()).getSystemService(ALARM_SERVICE);

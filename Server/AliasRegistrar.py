@@ -115,26 +115,23 @@ def update_onlinetime(connection):
     global aliasDict
     alias = ""
     id = ""
+    data = ""
     while True:
-        data = connection.recv(128)
-        if not data:
+        newdata = connection.recv(1024)
+        if not newdata:
             break
-        data = data.split(":", 1)
-        if data[0] == "ALIAS":
-            alias = data[1]
-        elif data[0] == "ID":
-            id = data[1]
-    print alias
-    print id
-
+        data += newdata
+    data = data.split("//", 1)
+    data = [i.split(":") for i in data]
+    for line in data:
+        if line[0] == "ALIAS":
+            alias = line[1]
+        elif line[0] == "ID":
+            id = line[1]
     for entry in aliasDict:
         if entry == alias and id == aliasDict[alias]["androidId"]:
-            print "True"
-        else:
-            print "False"
-
-
-
+            aliasDict[entry]["onlinetime"] = int(time())
+            update_alias_database()
 
 
 class AliasObj:

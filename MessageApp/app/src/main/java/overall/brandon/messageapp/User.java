@@ -1,5 +1,7 @@
 package overall.brandon.messageapp;
 
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
