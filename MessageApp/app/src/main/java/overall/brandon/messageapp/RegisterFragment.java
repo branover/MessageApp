@@ -6,7 +6,10 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -115,13 +118,19 @@ public class RegisterFragment extends Fragment {
 
         //Status TextView
         final TextView statusTextView = (TextView) v.findViewById(R.id.statusText);
-        user = new User(androidId,aliasText.getText().toString(),ipv4Address,Integer.parseInt(portEditText.getText().toString()),ipv6Address);
 
+        SharedPrefManager prefManager = new SharedPrefManager(getContext());
+        user = prefManager.retrieveUser();
+        if (user == null) {
+            user = new User(androidId, aliasText.getText().toString(), ipv4Address, Integer.parseInt(portEditText.getText().toString()), ipv6Address);
+            user.setAlias(aliasText.getText().toString());
+            user.setPort(Integer.parseInt(portEditText.getText().toString()));
+        }
+        portEditText.setText(String.valueOf(user.getPort()));
+        aliasText.setText(user.getAlias());
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user.setAlias(aliasText.getText().toString());
-                user.setPort(Integer.parseInt(portEditText.getText().toString()));
                 statusTextView.setText(Requests.registerUser(user));
                 updateAlarm(user);
             }
@@ -130,11 +139,33 @@ public class RegisterFragment extends Fragment {
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user.setAlias(aliasText.getText().toString());
-                user.setPort(Integer.parseInt(portEditText.getText().toString()));
                 statusTextView.setText(Requests.updateUser(user));
                 updateAlarm(user);
             }
+        });
+
+        //Auto update alias and port whenever it is modified
+        aliasText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                user.setAlias(s.toString());
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        portEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                user.setPort(Integer.parseInt(s.toString()));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         });
 
         updateAlarm(user);
@@ -152,5 +183,22 @@ public class RegisterFragment extends Fragment {
         Requests.keepalive(user);
         alarmManager = (AlarmManager) ((MainActivity)getActivity()).getSystemService(ALARM_SERVICE);
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,System.currentTimeMillis(), 1000 * 30,pendingIntent);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        SharedPrefManager prefManager = new SharedPrefManager(getContext());
+        prefManager.saveObject("user",user);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        SharedPrefManager prefManager = new SharedPrefManager(getContext());
+        user = prefManager.retrieveUser();
+        user.getAlias();
     }
 }
