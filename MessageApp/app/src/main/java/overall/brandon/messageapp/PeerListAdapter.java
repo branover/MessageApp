@@ -68,4 +68,6 @@ public class PeerListAdapter extends BaseAdapter implements ListAdapter {
 
         return view;
     }
+
+
 }

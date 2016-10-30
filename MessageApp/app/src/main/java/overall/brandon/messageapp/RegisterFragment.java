@@ -30,7 +30,7 @@ import static android.content.Context.WIFI_SERVICE;
 
 
 public class RegisterFragment extends Fragment {
-    User user;
+    User notFinalUser;
     AlarmManager alarmManager;
 
     //Home
@@ -44,7 +44,6 @@ public class RegisterFragment extends Fragment {
     public RegisterFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,7 +106,7 @@ public class RegisterFragment extends Fragment {
 
         ipTextView.setText(ipv4Address);
         if (!ipv6Address.isEmpty()) {
-            Client.SERVER_IP = SERVER_IP6;
+            //Client.SERVER_IP = SERVER_IP6;
             TextView ipv6TextView = (TextView) v.findViewById(R.id.ipv6TextView);
             ipv6TextView.setMovementMethod(new ScrollingMovementMethod());
             ipv6TextView.setText(ipv6Address);
@@ -120,12 +119,13 @@ public class RegisterFragment extends Fragment {
         final TextView statusTextView = (TextView) v.findViewById(R.id.statusText);
 
         SharedPrefManager prefManager = new SharedPrefManager(getContext());
-        user = prefManager.retrieveUser();
-        if (user == null) {
-            user = new User(androidId, aliasText.getText().toString(), ipv4Address, Integer.parseInt(portEditText.getText().toString()), ipv6Address);
-            user.setAlias(aliasText.getText().toString());
-            user.setPort(Integer.parseInt(portEditText.getText().toString()));
+        notFinalUser = prefManager.retrieveUser();
+        if (notFinalUser == null) {
+            notFinalUser = new User(androidId, aliasText.getText().toString(), ipv4Address, Integer.parseInt(portEditText.getText().toString()), ipv6Address);
+            notFinalUser.setAlias(aliasText.getText().toString());
+            notFinalUser.setPort(Integer.parseInt(portEditText.getText().toString()));
         }
+        final User user = notFinalUser;
         portEditText.setText(String.valueOf(user.getPort()));
         aliasText.setText(user.getAlias());
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -169,6 +169,8 @@ public class RegisterFragment extends Fragment {
         });
 
         updateAlarm(user);
+        Server server = new Server();
+        //server.execute(String.valueOf(user.getPort()));
 
         return v;
     }
@@ -190,7 +192,7 @@ public class RegisterFragment extends Fragment {
         super.onPause();
 
         SharedPrefManager prefManager = new SharedPrefManager(getContext());
-        prefManager.saveObject("user",user);
+        prefManager.saveObject("user",notFinalUser);
     }
 
     @Override
@@ -198,7 +200,9 @@ public class RegisterFragment extends Fragment {
         super.onResume();
 
         SharedPrefManager prefManager = new SharedPrefManager(getContext());
-        user = prefManager.retrieveUser();
-        user.getAlias();
+        notFinalUser = prefManager.retrieveUser();
+        if (notFinalUser != null) {
+            notFinalUser.getAlias();
+        }
     }
 }
