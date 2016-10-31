@@ -141,6 +141,27 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/updateButton"
                 android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:text="Start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/startServiceButton"
+                android:layout_weight="1" />
+
+            <Button
+                android:text="Stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/stopServiceButton"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <LinearLayout
@@ -159,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/statusText"
                 tools:text="SUCCESS" />
+
         </LinearLayout>
 
     </LinearLayout>

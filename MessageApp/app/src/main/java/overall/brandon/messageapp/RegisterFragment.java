@@ -2,10 +2,14 @@ package overall.brandon.messageapp;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
@@ -18,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.net.Inet4Address;
 import java.net.InetAddress;
@@ -32,6 +37,7 @@ import static android.content.Context.WIFI_SERVICE;
 public class RegisterFragment extends Fragment {
     User notFinalUser;
     AlarmManager alarmManager;
+    MainActivity mainActivity;
 
     //Home
     private static final String SERVER_IP = "192.168.0.3";
@@ -48,39 +54,7 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-    }
-
-    public String getLocalIpAddress() {
-        WifiManager wifiMgr = (WifiManager) getActivity().getSystemService(WIFI_SERVICE);
-        if(wifiMgr.isWifiEnabled()) {
-            WifiInfo wifiInfo = wifiMgr.getConnectionInfo();
-            int ip = wifiInfo.getIpAddress();
-            return String.format("%d.%d.%d.%d",
-                    (ip & 0xff),
-                    (ip >> 8 & 0xff),
-                    (ip >> 16 & 0xff),
-                    (ip >> 24 & 0xff));
-        }
-
-        try {
-            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
-                NetworkInterface intf = en.nextElement();
-                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
-                    InetAddress inetAddress = enumIpAddr.nextElement();
-                    Log.i("","111 inetAddress.getHostAddress(): "+inetAddress.getHostAddress());
-                    //the condition after && is missing in your snippet, checking instance of inetAddress
-                    if (!inetAddress.isLoopbackAddress() && inetAddress instanceof Inet4Address) {
-                        Log.i("","111 return inetAddress.getHostAddress(): "+inetAddress.getHostAddress());
-                        return inetAddress.getHostAddress();
-                    }
-
-                }
-            }
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
-
-        return null;
+        mainActivity = (MainActivity) getActivity();
     }
 
     @Override
@@ -168,9 +142,29 @@ public class RegisterFragment extends Fragment {
             public void afterTextChanged(Editable s) {}
         });
 
-        updateAlarm(user);
-        Server server = new Server();
+
+        //Server start and stop buttons
+        Button startServerButton = (Button) v.findViewById(R.id.startServiceButton);
+        Button stopServerButton = (Button) v.findViewById(R.id.stopServiceButton);
+
+        startServerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.serverService.startServer(getContext(),user.getPort());
+            }
+        });
+        stopServerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainActivity.serverService.stopServer(getContext());
+            }
+        });
+
+        //updateAlarm(user);
+        //Server server = new Server();
         //server.execute(String.valueOf(user.getPort()));
+
+
 
         return v;
     }
@@ -205,4 +199,5 @@ public class RegisterFragment extends Fragment {
             notFinalUser.getAlias();
         }
     }
+
 }
