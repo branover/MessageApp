@@ -3,6 +3,7 @@ import json
 from time import time
 
 ALIAS_DATABASE = "./Aliases/aliases.json"
+global aliasDict
 aliasDict = {}
 
 
@@ -75,6 +76,7 @@ def update_alias_database():
 
 
 def update_ip(connection):
+    global aliasDict
     alias = AliasObj()
     while True:
         data = connection.recv(128)

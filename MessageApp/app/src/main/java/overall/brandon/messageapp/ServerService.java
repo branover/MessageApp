@@ -3,6 +3,7 @@ package overall.brandon.messageapp;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -34,7 +35,7 @@ public class ServerService extends Service {
     public void startServer(Context context, int port) {
         Toast.makeText(context, "Started Server", Toast.LENGTH_SHORT).show();
         Server server = new Server();
-        server.execute(String.valueOf(port));
+        server.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR,String.valueOf(port));
     }
 
     public void stopServer(Context context) {

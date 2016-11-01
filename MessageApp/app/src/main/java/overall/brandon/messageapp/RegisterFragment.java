@@ -99,6 +99,8 @@ public class RegisterFragment extends Fragment {
             notFinalUser.setAlias(aliasText.getText().toString());
             notFinalUser.setPort(Integer.parseInt(portEditText.getText().toString()));
         }
+        notFinalUser.setIp(ipv4Address);
+        notFinalUser.setIpv6(ipv6Address);
         final User user = notFinalUser;
         portEditText.setText(String.valueOf(user.getPort()));
         aliasText.setText(user.getAlias());
@@ -125,6 +127,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 user.setAlias(s.toString());
+                notFinalUser = user;
             }
             @Override
             public void afterTextChanged(Editable s) {}
@@ -136,6 +139,7 @@ public class RegisterFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 user.setPort(Integer.parseInt(s.toString()));
+                notFinalUser = user;
             }
 
             @Override
@@ -160,7 +164,7 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        //updateAlarm(user);
+        updateAlarm(user);
         //Server server = new Server();
         //server.execute(String.valueOf(user.getPort()));
 

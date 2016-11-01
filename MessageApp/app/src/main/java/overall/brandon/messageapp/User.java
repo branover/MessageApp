@@ -58,4 +58,5 @@ public class User implements Serializable {
 
     public String getIPv6() { return this.ipv6;}
 
+    public void setIpv6(String ipv6Address) { this.ipv6 = ipv6Address;}
 }

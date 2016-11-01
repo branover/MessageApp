@@ -73,12 +73,46 @@ public class Client extends AsyncTask<Object, Void, Object> {
             case "Ping":
                 response = handleKeepaliveCommand((User) params[1]);
                 break;
+            case "ConnectToPeer":
+                response = handleConnectToPeerCommand((Peer) params[1]);
+                break;
             default:
                 response = "INVALID COMMAND";
         }
 
         return response;
 
+    }
+
+    private Object handleConnectToPeerCommand(Peer peer) {
+        Socket socket = null;
+
+        try {
+            socket = new Socket(peer.getIp(),peer.getPort());
+
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+
+            dataOutputStream.write("PEERTEST".getBytes());
+//            dataOutputStream.write(("ALIAS:"+user.getAlias()).getBytes());
+//            dataOutputStream.write("//".getBytes());
+//            dataOutputStream.write(("ID:"+user.getAndroidId()).getBytes());
+
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            //response = "UnknownHostException: " + e.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+            //response = "IOException: " + e.toString();
+        } finally {
+            if (socket != null) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return "TRUE";
     }
 
     private String handleKeepaliveCommand(User user) {
